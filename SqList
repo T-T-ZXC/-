@@ -1,0 +1,166 @@
+#include <iostream>
+#include <bits/stdc++.h> 
+using namespace std;
+#define OK 1
+#define ERROR 0
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+class List_Sq{
+	private:
+
+	int listsize;
+	public:
+	int *elem;
+	int length;
+	int InitList_Sq(int List_size){
+		elem=(int*)malloc(List_size*sizeof(int));
+		if(!elem)
+		exit(OVERFLOW);
+		length=0;
+		listsize=List_size;
+		return OK; 
+	}
+	int DestroyList_Sq()
+	{
+		if(!elem) return ERROR;
+		free(elem);
+		elem = NULL;
+		length =0;
+		listsize=0;
+		return OK; 
+	}
+	int ClearList_Sq(){
+	if(!elem) return ERROR;
+	length = 0;
+	return OK;
+	} 
+	int ListEmpty()
+	{
+		if(length==0)
+		return true;
+		else 
+		return false;
+	}
+	int ListLength(){
+		return length;
+	}
+	int GetElem_Sq(int i,int &e){
+		if((i<1)||(i>length))
+		return ERROR;
+		e=elem[i-1];
+		return OK;
+	}
+	int ListInsert_Sq(int i,int e){
+		if((i<1)||(i>length))
+		return ERROR;
+		if(length>=listsize){
+			elem=(int*)realloc(elem,(listsize+10)*sizeof(int));
+			if(!elem)exit (OVERFLOW);
+			listsize+=10;
+		}
+		for(int j=length-1;j>=i-1;--j)
+			elem[j+1]=elem[j];
+		elem[i-1]=e;
+		++length;
+		return OK; 
+		
+	}
+	int ListDelete(int i,int &e){
+		if((i<1)||(i>length))
+			return ERROR;
+		e=elem[i-1];
+		for(int j=i-1;j<length-1;j++){
+			elem[j]=elem[j+1];
+		}
+		length--;
+		return OK;		
+	} 
+	int  PriorElem(int cur,int &pre){
+		int i=2;
+		int *p=elem+1;
+		while(i<=length&&*p!=cur){
+			p++;
+			i++;
+		} 
+		if(i>length)
+			return ERROR;
+		else
+		{
+			pre==*--p;
+			return OK;
+		}
+	}
+	int NextElem(int cur,int &next){
+		int i=1;
+		int *p=elem;
+		while(i<length&&*p!=cur){
+			i++;
+			p++;
+		}
+		if (i==length)
+			return ERROR;
+		else{
+			next=*++p;
+			return OK;
+		}
+	}
+	int LocateElem(int e){
+		int *p;
+		int i=1;
+		p = elem;
+		while(i<=length&&e!=*(p++))	
+		i++;
+		if(i<=length)
+        	return i;
+    	else
+       		return 0;
+	}
+	int ListTraverse(){
+		int i=0;
+		if(!elem)
+			exit(OVERFLOW);
+		for(int i=0;i<length;i++){
+			printf("%d ",elem[i]); 
+		} 
+		return OK;
+	}
+	List_Sq MergeList(List_Sq L){
+		List_Sq Lc;
+		int i=1,j=1;
+		int k=0;
+		Lc.InitList_Sq(this->length+L.length);
+		while(i<this->length&&j<L.length){
+			int ai,bi;
+			this->GetElem_Sq(i,ai);
+			L.GetElem_Sq(j,bi);
+			if(ai<bi){
+				Lc.elem[k]=ai;
+				i++;
+			}
+			else{
+				Lc.elem[k]=bi;
+				j++;
+			}
+		}
+		return Lc;
+	}
+}; 
+
+
+int main(int argc, char** argv) {
+	List_Sq L;
+	L.InitList_Sq(10);
+	for(int i=1;i<=10;i++){
+		L.elem[i-1]=i;
+		L.length++;
+		
+	}
+	L.ListTraverse();
+	
+	
+	int e=4;
+	int location; 
+	location=L.LocateElem(e);
+	cout<<endl<<location;
+	int pre;
+	L.PriorElem(e,pre);
+}
