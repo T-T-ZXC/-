@@ -1,0 +1,114 @@
+#include <bits/stdc++.h> 
+using namespace std;
+#define OK 1
+#define ERROR 0
+typedef struct DulNode{
+	int data;
+	DulNode *prior;
+	DulNode *next;
+}DulNode,*DuLinklist;
+
+int InitList_Dul(DuLinklist &L){
+	L=(DuLinklist)malloc(sizeof(DulNode));
+	if(!L)exit(OVERFLOW);
+	L->next=L->prior=L;
+	return OK;
+}
+
+int GetElem_Dul(DuLinklist L,int i,int &e){
+	DuLinklist p=L->next;
+	int j=1;
+	while(p!=L&&j<i){
+		p=p->next;
+		++j;
+	}
+	if(p==L||j>i) return ERROR;
+	e=p->data;
+	return OK;
+} 
+
+int LocateNode_Dul(DuLinklist L,int key,DuLinklist &e){
+	DuLinklist p=L->next;
+	while(p!=L&&p->data!=key){
+		p=p->next;
+	}
+	if(p==L||p->data!=key) return ERROR;
+	e=p;
+	return OK;
+}
+
+DuLinklist GetElemP_Dul(DuLinklist L,int i){
+	DuLinklist p=L->next;
+	int j=1;
+	while(p!=L&&j<i){
+		p=p->next;
+		++j;
+	}
+	if(p==L||j>i) return NULL;
+	return p;
+} 
+
+int ListInsert_DuL(DuLinklist L, int i, int e){
+	DuLinklist s,p;
+	if (!(p=GetElemP_Dul(L,i))) 
+      return ERROR;   
+	if(!(s = (DuLinklist)malloc(sizeof(DulNode)))) return ERROR;
+	s->data=e;
+	s->prior=p->prior;
+	p->prior->next=s;
+	p->prior=s;
+	s->next=p;  
+	return OK;
+}
+
+int ListDelete_Dul(DuLinklist L, int i, int &e){
+	DuLinklist p;
+	if (!(p=GetElemP_Dul(L,i))) 
+      return ERROR;
+	e=p->data;
+	p->prior->next=p->next;
+	p->next->prior=p->prior;
+	free(p);
+	return OK;   
+}
+
+void TailCreateList_Dul(DuLinklist &L,int n){
+	L=(DuLinklist)malloc(sizeof(DulNode));
+	if(!L)exit(OVERFLOW);
+	L->next=L->prior=L;
+	DuLinklist r=L;
+	for(int i=0;i<n;i++){
+		DuLinklist p=(DuLinklist)malloc(sizeof(DulNode));
+		scanf("%d",&p->data);
+		p->next=r->next;
+		p->prior=r;
+		r->next->prior=p;
+		r->next=p; 
+		r=p;
+	}
+}
+
+int ListTrave_Dul(DuLinklist L){
+	if(!L->next||!L||!L->prior) return ERROR;
+	DuLinklist p=L->next;
+	while(p!=L){
+		printf("%d ",p->data);
+		p=p->next;
+	} 
+	return OK;
+} 
+
+int main(){
+	DuLinklist L;
+	cout<<"Please input a number:";
+	int num;
+	cin>>num;
+	cout<<"Please input the list:"<<endl;
+	TailCreateList_Dul(L,num);
+	ListTrave_Dul(L);
+	int loc=3;
+	int e;
+	if(GetElem_Dul(L,loc,e))
+	cout<<endl<<e<<endl;
+	
+}
